@@ -1,7 +1,7 @@
 package com.agoda.api.service.impl;
 
 import com.agoda.api.helper.CommonHelper;
-import com.agoda.api.service.TokenBucket;
+import com.agoda.api.service.RequestLimiter;
 
 import java.time.Duration;
 import java.time.LocalTime;
@@ -11,23 +11,23 @@ import java.util.Properties;
  * @author <a href="mailto:nazar.bukhari12@gmail.com">Nazar-E-Bukhari</a>
  * @since 8/4/18.
  */
-public class TokenBucketImpl implements TokenBucket {
+public class RequestLimiterImpl implements RequestLimiter {
 
   private int cityAPIAvailableTokens = 1;
   private int roomAPIAvailableTokens = 1;
   private Properties properties;
 
   private LocalTime startTime = LocalTime.now();
-  private static TokenBucketImpl tokenBucket = null;
+  private static RequestLimiterImpl tokenBucket = null;
 
-  private TokenBucketImpl() {
+  private RequestLimiterImpl() {
     properties = CommonHelper.getProperties();
   }
 
-  public static TokenBucketImpl getInstance(){
+  public static RequestLimiterImpl getInstance(){
 
     if(tokenBucket == null){
-      tokenBucket = new TokenBucketImpl();
+      tokenBucket = new RequestLimiterImpl();
     }
     return tokenBucket;
   }

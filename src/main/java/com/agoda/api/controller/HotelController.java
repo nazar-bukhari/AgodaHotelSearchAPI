@@ -1,9 +1,7 @@
 package com.agoda.api.controller;
 
-import com.agoda.api.exception.TooManyRequestException;
 import com.agoda.api.model.Hotel;
 import com.agoda.api.service.HotelService;
-import com.agoda.api.service.impl.TokenBucketImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -27,10 +25,7 @@ public class HotelController {
   @ResponseBody
   public List<Hotel> getHotelByCityName(final @PathVariable("cityName") String cityName,
                                         final @PathVariable("searchOrder") Optional<String> searchOrder) {
-    if(TokenBucketImpl.getInstance().tryConsume("city")){
       return hotelService.getHotelByCity(cityName, searchOrder);
-    }
-    throw new TooManyRequestException();
   }
 
   @RequestMapping(value = {"/room/{roomCategory}/{searchOrder}", "/room/{roomCategory}"},
@@ -38,9 +33,6 @@ public class HotelController {
   @ResponseBody
   public List<Hotel> getHotelByRoomCategory(final @PathVariable("roomCategory") String roomCategory,
                                             final @PathVariable("searchOrder") Optional<String> searchOrder) {
-    if(TokenBucketImpl.getInstance().tryConsume("room")){
       return hotelService.getHotelByRoomCategory(roomCategory, searchOrder);
-    }
-    throw new TooManyRequestException();
   }
 }

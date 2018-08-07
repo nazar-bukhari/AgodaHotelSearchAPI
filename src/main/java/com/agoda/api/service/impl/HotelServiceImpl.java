@@ -1,6 +1,7 @@
 package com.agoda.api.service.impl;
 
 import com.agoda.api.dao.HotelRepository;
+import com.agoda.api.exception.TooManyRequestException;
 import com.agoda.api.model.Hotel;
 import com.agoda.api.service.HotelService;
 import org.springframework.stereotype.Service;
@@ -17,43 +18,54 @@ import java.util.Optional;
 public class HotelServiceImpl implements HotelService {
 
   private HotelRepository hotelRepository;
+  private RequestLimiterImpl tokenBucket;
 
   public HotelServiceImpl() {
     hotelRepository = HotelRepository.getInstance();
+    tokenBucket = RequestLimiterImpl.getInstance();
   }
 
   //Using for Test
-  public HotelServiceImpl(final HotelRepository hotelRepository) {
+  public HotelServiceImpl(final HotelRepository hotelRepository, final RequestLimiterImpl tokenBucket) {
     this.hotelRepository = hotelRepository;
+    this.tokenBucket = tokenBucket;
   }
 
   @Override
   public List<Hotel> getHotelByCity(String cityName, Optional<String> searchOrder) {
 
-    List<Hotel> hotelListBySearchResult = new ArrayList<>();
-    List<Hotel> hotelList = getHotelRepositoryBySearchOrder(searchOrder);
+    if(tokenBucket.tryConsume("city")) {
 
-    for (Hotel hotel : hotelList) {
-      if (hotel.getCity().equalsIgnoreCase(cityName)) {
-        hotelListBySearchResult.add(hotel);
+      List<Hotel> hotelListBySearchResult = new ArrayList<>();
+      List<Hotel> hotelList = getHotelRepositoryBySearchOrder(searchOrder);
+
+      for (Hotel hotel : hotelList) {
+        if (hotel.getCity().equalsIgnoreCase(cityName)) {
+          hotelListBySearchResult.add(hotel);
+        }
       }
+      return hotelListBySearchResult;
     }
-    return hotelListBySearchResult;
+    throw new TooManyRequestException();
   }
 
   @Override
   public List<Hotel> getHotelByRoomCategory(String roomCategory, Optional<String> searchOrder) {
 
-    List<Hotel> hotelListBySearchResult = new ArrayList<>();
-    List<Hotel> hotelList = getHotelRepositoryBySearchOrder(searchOrder);
+    if(tokenBucket.tryConsume("room")) {
 
-    for (Hotel hotel : hotelList) {
-      if (hotel.getRoom().equalsIgnoreCase(roomCategory)) {
-        hotelListBySearchResult.add(hotel);
+      List<Hotel> hotelListBySearchResult = new ArrayList<>();
+      List<Hotel> hotelList = getHotelRepositoryBySearchOrder(searchOrder);
+
+      for (Hotel hotel : hotelList) {
+        if (hotel.getRoom().equalsIgnoreCase(roomCategory)) {
+          hotelListBySearchResult.add(hotel);
+        }
       }
-    }
 
-    return hotelListBySearchResult;
+      return hotelListBySearchResult;
+    }
+    throw new TooManyRequestException();
   }
 
   private List<Hotel> getHotelRepositoryBySearchOrder(Optional<String> searchOrder) {
