@@ -53,8 +53,14 @@ public class HotelServiceImplTest {
     }
 
     @Test
-    public void getHotelByNullPriceOrder() {
+    public void testFindHotelByNullPriceOrder() {
         List<Hotel> hotels = hotelService.getHotelByRoomCategory("Sweet Suite", null);
+        assertThat(hotels.size()).isEqualTo(2);
+    }
+
+    @Test
+    public void testFindHotelByEmptyPriceOrder(){
+        List<Hotel> hotels = hotelService.getHotelByRoomCategory("Sweet Suite", Optional.empty());
         assertThat(hotels.size()).isEqualTo(2);
     }
 

@@ -4,6 +4,8 @@ import com.agoda.api.dao.HotelRepository;
 import com.agoda.api.helper.CommonHelper;
 import com.agoda.api.model.Hotel;
 import com.opencsv.bean.CsvToBeanBuilder;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -16,13 +18,15 @@ import java.util.Properties;
 @SpringBootApplication
 public class ApiApplication {
 
+	private static Logger logger = LogManager.getLogger("ApiApplication");
+
 	public static void main(String[] args) {
 
 		loadDataFile();
 		CommonHelper.loadPropertyFile();
 		SpringApplication.run(ApiApplication.class, args);
 
-		new ApiApplication().fileWatcher();
+		fileWatcher();
 	}
 
 	private static void loadDataFile(){
@@ -35,7 +39,7 @@ public class ApiApplication {
 		}
 	}
 
-	private void fileWatcher(){
+	private static void fileWatcher(){
 
 		boolean isFileWatcherActive = true;
 		String dataFileName = "hoteldb.csv";
@@ -53,6 +57,7 @@ public class ApiApplication {
 					if (!datafileCheckSumAtStartup.equals(dataFileCheckSumAfterTimeInterval)) {
 						datafileCheckSumAtStartup = dataFileCheckSumAfterTimeInterval;
 						loadDataFile();
+						logger.info("Re loading data file at: "+LocalTime.now());
 					}
 				}
 				catch (Exception ex){

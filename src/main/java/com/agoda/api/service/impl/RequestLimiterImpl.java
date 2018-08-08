@@ -77,14 +77,14 @@ public class RequestLimiterImpl implements RequestLimiter {
   @Override
   public void resetTokenAfterInterval() {
 
-    int defaultTime = 10;
-    int cityAPITimeRange = (properties.containsKey("cityAPITimeRange") &&
-            (!properties.getProperty("cityAPITimeRange").isEmpty())) ?
-            Integer.parseInt(properties.getProperty("cityAPITimeRange")) : defaultTime;
+    int defaultTime = Integer.parseInt(properties.getProperty("defaultAPITimeLimit"));
+    int cityAPITimeRange = (properties.containsKey("cityAPITimeLimit") &&
+            (!properties.getProperty("cityAPITimeLimit").isEmpty())) ?
+            Integer.parseInt(properties.getProperty("cityAPITimeLimit")) : defaultTime;
 
-    int roomAPITimeRange = (properties.containsKey("roomAPITimeRange") &&
-            (!properties.getProperty("roomAPITimeRange").isEmpty())) ?
-            Integer.parseInt(properties.getProperty("roomAPITimeRange")) : defaultTime;
+    int roomAPITimeRange = (properties.containsKey("roomAPITimeLimit") &&
+            (!properties.getProperty("roomAPITimeLimit").isEmpty())) ?
+            Integer.parseInt(properties.getProperty("roomAPITimeLimit")) : defaultTime;
 
     LocalTime currentTime = LocalTime.now();
     long elapsedTimeInSeconds = Duration.between(startTime,currentTime).getSeconds();
@@ -99,6 +99,5 @@ public class RequestLimiterImpl implements RequestLimiter {
       startTime = currentTime;
     }
   }
-
 
 }
