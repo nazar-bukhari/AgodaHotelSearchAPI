@@ -11,6 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.time.Duration;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Properties;
@@ -43,14 +44,16 @@ public class ApiApplication {
 
 		boolean isFileWatcherActive = true;
 		String dataFileName = "hoteldb.csv";
-		int startupMinutes = LocalTime.now().getMinute();
+		LocalTime startupTime = LocalTime.now();
 		Properties properties = CommonHelper.getProperties();
 		String datafileCheckSumAtStartup = CommonHelper.generateFileCheckSum(dataFileName);
 
 		while(isFileWatcherActive){
 
-			int currentTimeMinutes = LocalTime.now().getMinute();
-			if(currentTimeMinutes - startupMinutes > Integer.parseInt(properties.getProperty("checksumInterval"))){
+			LocalTime currentTime = LocalTime.now();
+			long elapsedTimeInMinutes = Duration.between(startupTime,currentTime).toMinutes();
+
+			if(elapsedTimeInMinutes > Integer.parseInt(properties.getProperty("checksumInterval"))){
 
 				try {
 					String dataFileCheckSumAfterTimeInterval = CommonHelper.generateFileCheckSum(dataFileName);
@@ -64,7 +67,7 @@ public class ApiApplication {
 					isFileWatcherActive = false;
 					ex.printStackTrace();
 				}
-				startupMinutes = LocalTime.now().getMinute();
+				startupTime = LocalTime.now();
 			}
 		}
 	}
