@@ -2,6 +2,8 @@ package com.agoda.api.service.impl;
 
 import com.agoda.api.helper.CommonHelper;
 import com.agoda.api.service.RequestLimiter;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.time.Duration;
 import java.time.LocalTime;
@@ -13,18 +15,20 @@ import java.util.Properties;
  */
 public class RequestLimiterImpl implements RequestLimiter {
 
-  private int cityAPIAvailableTokens = 1;
-  private int roomAPIAvailableTokens = 1;
+  private int cityAPIConsumedTokens = 0;
+  private int roomAPIConsumedTokens = 0;
   private Properties properties;
 
   private LocalTime startTime = LocalTime.now();
   private static RequestLimiterImpl tokenBucket = null;
+  private static Logger logger = LogManager.getLogger("RequestLimiterImpl");
+
 
   private RequestLimiterImpl() {
     properties = CommonHelper.getProperties();
   }
 
-  public static RequestLimiterImpl getInstance(){
+  public static synchronized RequestLimiterImpl getInstance(){
 
     if(tokenBucket == null){
       tokenBucket = new RequestLimiterImpl();
@@ -44,9 +48,14 @@ public class RequestLimiterImpl implements RequestLimiter {
                                 (!properties.getProperty("cityAPITokenCapacity").isEmpty())) ?
                                 Integer.parseInt(properties.getProperty("cityAPITokenCapacity")) : defaultAPITokenCapacity;
 
-      if(cityAPITokenCapacity > cityAPIAvailableTokens){
-        cityAPIAvailableTokens++;
-        return true;
+      synchronized (this) {
+        if (cityAPITokenCapacity > cityAPIConsumedTokens) {
+
+          cityAPIConsumedTokens++;
+          logger.info("Accepting Request: "+ cityAPIConsumedTokens);
+          System.out.println("Accepting Request(Testing Purpose): "+ cityAPIConsumedTokens);
+          return true;
+        }
       }
     }
     else if(requestType.equals("room")){
@@ -55,9 +64,11 @@ public class RequestLimiterImpl implements RequestLimiter {
               (!properties.getProperty("roomAPITokenCapacity").isEmpty())) ?
               Integer.parseInt(properties.getProperty("roomAPITokenCapacity")) : defaultAPITokenCapacity;
 
-      if(roomAPITokenCapacity > roomAPIAvailableTokens){
-        roomAPIAvailableTokens++;
-        return true;
+      synchronized (this) {
+        if (roomAPITokenCapacity > roomAPIConsumedTokens) {
+          roomAPIConsumedTokens++;
+          return true;
+        }
       }
     }
     return false;
@@ -79,12 +90,12 @@ public class RequestLimiterImpl implements RequestLimiter {
     long elapsedTimeInSeconds = Duration.between(startTime,currentTime).getSeconds();
 
     if(elapsedTimeInSeconds >= cityAPITimeRange){
-      cityAPIAvailableTokens = 0;
+      cityAPIConsumedTokens = 0;
       startTime = currentTime;
     }
 
     if(elapsedTimeInSeconds >= roomAPITimeRange){
-      roomAPIAvailableTokens = 0;
+      roomAPIConsumedTokens = 0;
       startTime = currentTime;
     }
   }
