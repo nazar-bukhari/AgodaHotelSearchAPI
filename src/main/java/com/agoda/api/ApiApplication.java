@@ -4,6 +4,7 @@ import com.agoda.api.dao.HotelRepository;
 import com.agoda.api.helper.CommonHelper;
 import com.agoda.api.model.Hotel;
 import com.opencsv.bean.CsvToBeanBuilder;
+import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.boot.SpringApplication;
@@ -23,6 +24,7 @@ public class ApiApplication {
 
 	public static void main(String[] args) {
 
+		BasicConfigurator.configure();
 		loadDataFile();
 		CommonHelper.loadPropertyFile();
 		SpringApplication.run(ApiApplication.class, args);
@@ -36,6 +38,7 @@ public class ApiApplication {
 			List<Hotel> hotelList = new CsvToBeanBuilder(new FileReader("hoteldb.csv")).withType(Hotel.class).build().parse();
 			HotelRepository.getInstance().process(hotelList);
 		} catch (IOException e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 	}

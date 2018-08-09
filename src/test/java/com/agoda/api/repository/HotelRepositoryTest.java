@@ -57,10 +57,10 @@ public class HotelRepositoryTest {
 
     List<Hotel> hotelList = new ArrayList<>();
 
-    Hotel hotel1 = new Hotel("Bangkok", "1", "Deluxe", 1000);
-    Hotel hotel2 = new Hotel("Bangkok", "2", "Deluxe", 300);
-    Hotel hotel3 = new Hotel("Bangkok", "3", "Sweet Suite", 12000);
-    Hotel hotel4 = new Hotel("Amsterdam", "4", "Sweet Suite", 15000);
+    Hotel hotel1 = new Hotel("Bangkok", 1, "Deluxe", 1000);
+    Hotel hotel2 = new Hotel("Bangkok", 2, "Deluxe", 300);
+    Hotel hotel3 = new Hotel("Bangkok", 3, "Sweet Suite", 12000);
+    Hotel hotel4 = new Hotel("Amsterdam", 4, "Sweet Suite", 15000);
 
     hotelList.add(hotel1);
     hotelList.add(hotel2);

@@ -67,16 +67,16 @@ public class HotelServiceImplTest {
     @Test
     public void testFindHotelByValidRoomCategoryOnPriceOrder() throws Exception{
 
-        String hotelId1 = hotelService.getHotelByRoomCategory("Deluxe",Optional.of("asc")).get(0).getHotelId();
-        String hotelId2 = hotelService.getHotelByRoomCategory("Deluxe",Optional.of("asc")).get(2).getHotelId();
+        long hotelId1 = hotelService.getHotelByRoomCategory("Deluxe",Optional.of("asc")).get(0).getHotelId();
+        long hotelId2 = hotelService.getHotelByRoomCategory("Deluxe",Optional.of("asc")).get(2).getHotelId();
 
-        String hotelId3 = hotelService.getHotelByRoomCategory("Deluxe",Optional.of("desc")).get(0).getHotelId();
-        String hotelId4 = hotelService.getHotelByRoomCategory("Deluxe",Optional.of("desc")).get(1).getHotelId();
+        long hotelId3 = hotelService.getHotelByRoomCategory("Deluxe",Optional.of("desc")).get(0).getHotelId();
+        long hotelId4 = hotelService.getHotelByRoomCategory("Deluxe",Optional.of("desc")).get(1).getHotelId();
 
-        assertThat(hotelId1).isEqualTo("2");
-        assertThat(hotelId2).isEqualTo("1");
-        assertThat(hotelId3).isEqualTo("1");
-        assertThat(hotelId4).isEqualTo("6");
+        assertThat(hotelId1).isEqualTo(2);
+        assertThat(hotelId2).isEqualTo(1);
+        assertThat(hotelId3).isEqualTo(1);
+        assertThat(hotelId4).isEqualTo(6);
     }
 
     @Test
@@ -105,12 +105,12 @@ public class HotelServiceImplTest {
 
         List<Hotel> hotelList = new ArrayList<>();
 
-        Hotel hotel1 = new Hotel("Bangkok", "1", "Deluxe", 1000);
-        Hotel hotel2 = new Hotel("Bangkok", "2", "Deluxe", 300);
-        Hotel hotel3 = new Hotel("Bangkok", "3", "Sweet Suite", 12000);
-        Hotel hotel4 = new Hotel("Amsterdam", "4", "Sweet Suite", 15000);
-        Hotel hotel5 = new Hotel("Ashburn", "5", "Superior", 700);
-        Hotel hotel6 = new Hotel("Ashburn", "6", "Deluxe", 500);
+        Hotel hotel1 = new Hotel("Bangkok", 1, "Deluxe", 1000);
+        Hotel hotel2 = new Hotel("Bangkok", 2, "Deluxe", 300);
+        Hotel hotel3 = new Hotel("Bangkok", 3, "Sweet Suite", 12000);
+        Hotel hotel4 = new Hotel("Amsterdam", 4, "Sweet Suite", 15000);
+        Hotel hotel5 = new Hotel("Ashburn", 5, "Superior", 700);
+        Hotel hotel6 = new Hotel("Ashburn", 6, "Deluxe", 500);
 
         hotelList.add(hotel1);
         hotelList.add(hotel2);

@@ -53,7 +53,6 @@ public class RequestLimiterImpl implements RequestLimiter {
 
           cityAPIConsumedTokens++;
           logger.info("Accepting Request: "+ cityAPIConsumedTokens);
-          System.out.println("Accepting Request(Testing Purpose): "+ cityAPIConsumedTokens);
           return true;
         }
       }

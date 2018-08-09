@@ -82,9 +82,9 @@ public class WebClientIntegrationTest {
 
     List<Hotel> hotelList = new ArrayList<>();
 
-    Hotel hotel1 = new Hotel("Bangkok", "1", "Deluxe", 1000);
-    Hotel hotel2 = new Hotel("Bangkok", "2", "Deluxe", 300);
-    Hotel hotel3 = new Hotel("Bangkok", "3", "Deluxe", 12000);
+    Hotel hotel1 = new Hotel("Bangkok", 1, "Deluxe", 1000);
+    Hotel hotel2 = new Hotel("Bangkok", 2, "Deluxe", 300);
+    Hotel hotel3 = new Hotel("Bangkok", 3, "Deluxe", 12000);
 
     hotelList.add(hotel1);
     hotelList.add(hotel2);

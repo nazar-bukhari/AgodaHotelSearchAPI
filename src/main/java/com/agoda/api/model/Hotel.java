@@ -2,6 +2,8 @@ package com.agoda.api.model;
 
 import com.opencsv.bean.CsvBindByName;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * @author <a href="mailto:nazar.bukhari12@gmail.com">Nazar-E-Bukhari</a>
  * @since 8/1/18.
@@ -9,21 +11,25 @@ import com.opencsv.bean.CsvBindByName;
 public class Hotel {
 
   @CsvBindByName(column = "CITY", required = true)
+  @NotNull
   private String city;
 
   @CsvBindByName(column = "HOTELID", required = true)
-  private String hotelId;
+  @NotNull
+  private long hotelId;
 
   @CsvBindByName(column = "ROOM", required = true)
+  @NotNull
   private String room;
 
   @CsvBindByName(column = "PRICE", required = true)
+  @NotNull
   private double price;
 
   public Hotel() {
   }
 
-  public Hotel(String city, String hotelId, String room, double price) {
+  public Hotel(String city, long hotelId, String room, double price) {
     this.city = city;
     this.hotelId = hotelId;
     this.room = room;
@@ -38,11 +44,11 @@ public class Hotel {
     this.city = city;
   }
 
-  public String getHotelId() {
+  public long getHotelId() {
     return hotelId;
   }
 
-  public void setHotelId(final String hotelId) {
+  public void setHotelId(final long hotelId) {
     this.hotelId = hotelId;
   }
 
